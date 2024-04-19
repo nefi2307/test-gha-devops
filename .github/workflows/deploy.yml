@@ -1,1 +1,29 @@
+name: Node.js
 
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Nodejs Build
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run build
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFARE_API_TOKEN }}
+          accountId: d0687473c6bb7b8ab9ef06b793b2e62f
+          projectName: sample-site
+          directory: dist
+          wranglerVersion: '3'
